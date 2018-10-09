@@ -49,14 +49,20 @@ Inicio
     clrf PORTC
     clrf PORTD
     clrf PORTE
+    movlw b'00011010'
+    movwf OperandoA
     
 Principal
-    movf PORTA,W	;Lee el valor de las variables de entrada
+    movf OperandoA,W	;Lee el valor de las variables de entrada
     andlw b'00001111'	;Se queda conlos cuatro bits más bajos de entrada
     call DecoHEX	;Decodifica el nibble inferior en hexadecimal
-    movwf PORTB		;Se visualiza por el puerto de salida
-    movwf PORTC
-    movwf PORTD
+    movwf PORTD		;Se visualiza por el puerto de salida
+    
+    
+    swapf OperandoA,W	;Se intercambian los nibbles del puerto
+    andlw b'00001111'	;Se queda conlos cuatro bits más bajos de entrada
+    call DecoHEX	;Decodifica el nibble inferior en hexadecimal
+    movwf PORTC		;Se visualiza por el puerto de salida
     goto Principal	;Se crea un bucle cerrado infinito
     
 ;Subrutina DecoHEX**************************************************************    
