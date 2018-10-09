@@ -42,11 +42,44 @@ Inicio
     clrf PORTC
     clrf PORTD
     clrf PORTE
+    
 Principal
-    movf PORTA,W    ;Carga el registro de datos del Puerto A en W.
-    movwf PORTB	    ;El contenido de W se deposita en el Puerto B.
-    movwf PORTC	    ;El contenido de W se deposita en el Puerto C.
-    movwf PORTD	    ;El contenido de W se deposita en el Puerto D.
+    clrf PORTB
+    clrf PORTC
+    clrf PORTD
+    
+    btfss Pulsador1
+    goto EnciendeLed0    
+    btfss Pulsador2
+    goto EnciendeLed1
+    btfss Pulsador3
+    goto EnciendeLed2
+    btfss Pulsador4
+    goto EnciendeLed3
     goto Principal  ;Se crea un bucle cerrado infinito
+
+EnciendeLed0
+    bsf PORTB,0
+    bsf PORTC,0
+    bsf PORTD,0
+    goto Principal
+    
+EnciendeLed1
+    bsf PORTB,1
+    bsf PORTC,1
+    bsf PORTD,1
+    goto Principal    
+    
+EnciendeLed2
+    bsf PORTB,2
+    bsf PORTC,2
+    bsf PORTD,2
+    goto Principal   
+    
+EnciendeLed3
+    bsf PORTB,3
+    bsf PORTC,3
+    bsf PORTD,3
+    goto Principal    
     
     END

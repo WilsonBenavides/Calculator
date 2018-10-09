@@ -1,4 +1,4 @@
-MPASM 5.75                    CALCULATOR.ASM   10-9-2018  6:37:45         PAGE  1
+MPASM 5.75                    CALCULATOR.ASM   10-9-2018  9:54:05         PAGE  1
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
@@ -57,7 +57,7 @@ Message[302]: Register in operand not in bank 0.  Ensure that bank bits are corr
 000F   3080           00034     movlw b'10000000'   ;Se utilizan los 7 primeros bits del Puerto D como 
 Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
 0010   0088           00035     movwf TRISD         ;salidas y el pin RD7 como entrada
-MPASM 5.75                    CALCULATOR.ASM   10-9-2018  6:37:45         PAGE  2
+MPASM 5.75                    CALCULATOR.ASM   10-9-2018  9:54:05         PAGE  2
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
@@ -73,15 +73,48 @@ Message[302]: Register in operand not in bank 0.  Ensure that bank bits are corr
 0017   0187           00042     clrf PORTC
 0018   0188           00043     clrf PORTD
 0019   0189           00044     clrf PORTE
-001A                  00045 Principal
-001A   0805           00046     movf PORTA,W    ;Carga el registro de datos del Puerto A en W.
-001B   0086           00047     movwf PORTB     ;El contenido de W se deposita en el Puerto B.
-001C   0087           00048     movwf PORTC     ;El contenido de W se deposita en el Puerto C.
-001D   0088           00049     movwf PORTD     ;El contenido de W se deposita en el Puerto D.
-001E   281A           00050     goto Principal  ;Se crea un bucle cerrado infinito
-                      00051     
-                      00052     END
-MPASM 5.75                    CALCULATOR.ASM   10-9-2018  6:37:45         PAGE  3
+                      00045     
+001A                  00046 Principal
+001A   0186           00047     clrf PORTB
+001B   0187           00048     clrf PORTC
+001C   0188           00049     clrf PORTD
+                      00050     
+001D   1C09           00051     btfss Pulsador1
+001E   2826           00052     goto EnciendeLed0    
+001F   1C89           00053     btfss Pulsador2
+0020   282A           00054     goto EnciendeLed1
+0021   1D09           00055     btfss Pulsador3
+0022   282E           00056     goto EnciendeLed2
+0023   1F88           00057     btfss Pulsador4
+0024   2832           00058     goto EnciendeLed3
+0025   281A           00059     goto Principal  ;Se crea un bucle cerrado infinito
+                      00060 
+0026                  00061 EnciendeLed0
+0026   1406           00062     bsf PORTB,0
+0027   1407           00063     bsf PORTC,0
+0028   1408           00064     bsf PORTD,0
+0029   281A           00065     goto Principal
+                      00066     
+002A                  00067 EnciendeLed1
+002A   1486           00068     bsf PORTB,1
+002B   1487           00069     bsf PORTC,1
+002C   1488           00070     bsf PORTD,1
+002D   281A           00071     goto Principal    
+                      00072     
+002E                  00073 EnciendeLed2
+002E   1506           00074     bsf PORTB,2
+002F   1507           00075     bsf PORTC,2
+0030   1508           00076     bsf PORTD,2
+0031   281A           00077     goto Principal   
+                      00078     
+0032                  00079 EnciendeLed3
+0032   1586           00080     bsf PORTB,3
+0033   1587           00081     bsf PORTC,3
+0034   1588           00082     bsf PORTD,3
+0035   281A           00083     goto Principal    
+                      00084     
+                      00085     END
+MPASM 5.75                    CALCULATOR.ASM   10-9-2018  9:54:05         PAGE  3
 
 
 SYMBOL TABLE
@@ -140,7 +173,7 @@ BRG6                              00000006
 BRG7                              00000007
 BRG8                              00000000
 BRG9                              00000001
-MPASM 5.75                    CALCULATOR.ASM   10-9-2018  6:37:45         PAGE  4
+MPASM 5.75                    CALCULATOR.ASM   10-9-2018  9:54:05         PAGE  4
 
 
 SYMBOL TABLE
@@ -199,7 +232,7 @@ CHS0                              00000002
 CHS1                              00000003
 CHS2                              00000004
 CHS3                              00000005
-MPASM 5.75                    CALCULATOR.ASM   10-9-2018  6:37:45         PAGE  5
+MPASM 5.75                    CALCULATOR.ASM   10-9-2018  9:54:05         PAGE  5
 
 
 SYMBOL TABLE
@@ -236,6 +269,10 @@ EEDATH                            0000010E
 EEIE                              00000004
 EEIF                              00000004
 EEPGD                             00000007
+EnciendeLed0                      00000026
+EnciendeLed1                      0000002A
+EnciendeLed2                      0000002E
+EnciendeLed3                      00000032
 F                                 00000001
 FERR                              00000002
 FSR                               00000004
@@ -254,16 +291,16 @@ INDF                              00000000
 INTCON                            0000000B
 INTE                              00000004
 INTEDG                            00000006
-INTF                              00000001
-IOCB                              00000096
-IOCB0                             00000000
-IOCB1                             00000001
-MPASM 5.75                    CALCULATOR.ASM   10-9-2018  6:37:45         PAGE  6
+MPASM 5.75                    CALCULATOR.ASM   10-9-2018  9:54:05         PAGE  6
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
+INTF                              00000001
+IOCB                              00000096
+IOCB0                             00000000
+IOCB1                             00000001
 IOCB2                             00000002
 IOCB3                             00000003
 IOCB4                             00000004
@@ -313,16 +350,16 @@ P1M0                              00000006
 P1M1                              00000007
 PCL                               00000002
 PCLATH                            0000000A
-PCON                              0000008E
-PDC0                              00000000
-PDC1                              00000001
-PDC2                              00000002
-MPASM 5.75                    CALCULATOR.ASM   10-9-2018  6:37:45         PAGE  7
+MPASM 5.75                    CALCULATOR.ASM   10-9-2018  9:54:05         PAGE  7
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
+PCON                              0000008E
+PDC0                              00000000
+PDC1                              00000001
+PDC2                              00000002
 PDC3                              00000003
 PDC4                              00000004
 PDC5                              00000005
@@ -372,16 +409,16 @@ RB2                               00000002
 RB3                               00000003
 RB4                               00000004
 RB5                               00000005
-RB6                               00000006
-RB7                               00000007
-RBIE                              00000003
-RBIF                              00000000
-MPASM 5.75                    CALCULATOR.ASM   10-9-2018  6:37:45         PAGE  8
+MPASM 5.75                    CALCULATOR.ASM   10-9-2018  9:54:05         PAGE  8
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
+RB6                               00000006
+RB7                               00000007
+RBIE                              00000003
+RBIF                              00000000
 RC0                               00000000
 RC1                               00000001
 RC2                               00000002
@@ -431,16 +468,16 @@ SPBRG                             00000099
 SPBRGH                            0000009A
 SPEN                              00000007
 SR0                               00000006
-SR1                               00000007
-SRCON                             00000185
-SREN                              00000005
-SSPADD                            00000093
-MPASM 5.75                    CALCULATOR.ASM   10-9-2018  6:37:45         PAGE  9
+MPASM 5.75                    CALCULATOR.ASM   10-9-2018  9:54:05         PAGE  9
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
+SR1                               00000007
+SRCON                             00000185
+SREN                              00000005
+SSPADD                            00000093
 SSPBUF                            00000013
 SSPCON                            00000014
 SSPCON2                           00000091
@@ -490,16 +527,16 @@ TMR1IF                            00000000
 TMR1L                             0000000E
 TMR1ON                            00000000
 TMR2                              00000011
-TMR2IE                            00000001
-TMR2IF                            00000001
-TMR2ON                            00000002
-TOUTPS0                           00000003
-MPASM 5.75                    CALCULATOR.ASM   10-9-2018  6:37:45         PAGE 10
+MPASM 5.75                    CALCULATOR.ASM   10-9-2018  9:54:05         PAGE 10
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
+TMR2IE                            00000001
+TMR2IF                            00000001
+TMR2ON                            00000002
+TOUTPS0                           00000003
 TOUTPS1                           00000004
 TOUTPS2                           00000005
 TOUTPS3                           00000006
@@ -549,16 +586,16 @@ TUN0                              00000000
 TUN1                              00000001
 TUN2                              00000002
 TUN3                              00000003
-TUN4                              00000004
-TX8_9                             00000006
-TX9                               00000006
-TX9D                              00000000
-MPASM 5.75                    CALCULATOR.ASM   10-9-2018  6:37:45         PAGE 11
+MPASM 5.75                    CALCULATOR.ASM   10-9-2018  9:54:05         PAGE 11
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
+TUN4                              00000004
+TX8_9                             00000006
+TX9                               00000006
+TX9D                              00000000
 TXD8                              00000000
 TXEN                              00000005
 TXIE                              00000004
@@ -608,16 +645,16 @@ _BOR4V_BOR40V                     00003FFF
 _BOREN_NSLEEP                     00003EFF
 _BOREN_OFF                        00003CFF
 _BOREN_ON                         00003FFF
-_BOREN_SBODEN                     00003DFF
-_BOR_NSLEEP                       00003EFF
-_BOR_OFF                          00003CFF
-_BOR_ON                           00003FFF
-MPASM 5.75                    CALCULATOR.ASM   10-9-2018  6:37:45         PAGE 12
+MPASM 5.75                    CALCULATOR.ASM   10-9-2018  9:54:05         PAGE 12
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
+_BOREN_SBODEN                     00003DFF
+_BOR_NSLEEP                       00003EFF
+_BOR_OFF                          00003CFF
+_BOR_ON                           00003FFF
 _BOR_SBODEN                       00003DFF
 _CONFIG1                          00002007
 _CONFIG2                          00002008
@@ -667,23 +704,27 @@ _WDT_OFF                          00003FF7
 _WDT_ON                           00003FFF
 _WRT_1FOURTH                      00003BFF
 _WRT_256                          00003DFF
+MPASM 5.75                    CALCULATOR.ASM   10-9-2018  9:54:05         PAGE 13
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
 _WRT_HALF                         000039FF
 _WRT_OFF                          00003FFF
 _XT_OSC                           00003FF9
 __16F887                          00000001
-MPASM 5.75                    CALCULATOR.ASM   10-9-2018  6:37:45         PAGE 13
 
 
 MEMORY USAGE MAP ('X' = Used,  '-' = Unused)
 
-
-0000 : X----XXXXXXXXXXX XXXXXXXXXXXXXXX- ---------------- ----------------
+0000 : X----XXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXX----------
 2000 : -------XX------- ---------------- ---------------- ----------------
 
 All other memory blocks unused.
 
-Program Memory Words Used:    27
-Program Memory Words Free:  8165
+Program Memory Words Used:    50
+Program Memory Words Free:  8142
 
 
 Errors   :     0
