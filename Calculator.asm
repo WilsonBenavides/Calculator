@@ -55,7 +55,9 @@ Inicio
 Principal       
     btfss Pulsador1	;Salta si el pulsador 1 no está presionado
     goto CargarOpA
-goto Principal
+    btfss Pulsador2	;Salta si el pulsador 2 no está presionado
+    goto CargarOpB
+    goto Principal
 
 ;Subrutina CargarOpA************************************************************
 CargarOpA
@@ -71,6 +73,22 @@ CargarOpA
     call DecoHEX	;Decodifica el nibble inferior en hexadecimal
     movwf PORTC		;Se visualiza por el puerto de salida    
     goto Principal	;Se crea un bucle cerrado infinito
+    
+;Subrutina CargarOpA************************************************************
+CargarOpB
+    movf PORTA,W	;Carga el registro de datos del Puerto A en W.
+    movwf OperandoB	;Se guarda el valor del puerto en la regstro OperandoA        
+    movf OperandoB,W	;Lee el valor de las variables de entrada
+    andlw b'00001111'	;Se queda conlos cuatro bits más bajos de entrada
+    call DecoHEX	;Decodifica el nibble inferior en hexadecimal
+    movwf PORTD		;Se visualiza por el puerto de salida
+    
+    swapf OperandoB,W	;Se intercambian los nibbles del puerto
+    andlw b'00001111'	;Se queda conlos cuatro bits más bajos de entrada
+    call DecoHEX	;Decodifica el nibble inferior en hexadecimal
+    movwf PORTC		;Se visualiza por el puerto de salida    
+    goto Principal	;Se crea un bucle cerrado infinito
+    
 ;Subrutina DecoHEX**************************************************************    
 DecoHEX
     addwf PCL,F		;-gfedcba
