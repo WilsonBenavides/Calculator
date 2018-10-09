@@ -98,7 +98,11 @@ ${OBJECTDIR}/Calculator.o: Calculator.asm  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} "${OBJECTDIR}" 
 	@${RM} ${OBJECTDIR}/Calculator.o.d 
 	@${RM} ${OBJECTDIR}/Calculator.o 
-	@${FIXDEPS} dummy.d -e "${OBJECTDIR}/Calculator.err" $(SILENT) -c ${MP_AS} $(MP_EXTRA_AS_PRE) -d__DEBUG -d__MPLAB_DEBUGGER_SIMULATOR=1 -q -p$(MP_PROCESSOR_OPTION)  -l\"${OBJECTDIR}/Calculator.lst\" -e\"${OBJECTDIR}/Calculator.err\" $(ASM_OPTIONS)    -o\"${OBJECTDIR}/Calculator.o\" \"Calculator.asm\" 
+	@${FIXDEPS} dummy.d -e "F:/Willy/Dani-Assembler/asembler/Calculator/Calculator.ERR" $(SILENT) -c ${MP_AS} $(MP_EXTRA_AS_PRE) -d__DEBUG -d__MPLAB_DEBUGGER_SIMULATOR=1 -q -p$(MP_PROCESSOR_OPTION)  $(ASM_OPTIONS)    \"F:/Willy/Dani-Assembler/asembler/Calculator/Calculator.asm\" 
+	@${MV}  F:/Willy/Dani-Assembler/asembler/Calculator/Calculator.O ${OBJECTDIR}/Calculator.o
+	@${MV}  F:/Willy/Dani-Assembler/asembler/Calculator/Calculator.ERR ${OBJECTDIR}/Calculator.o.err
+	@${MV}  F:/Willy/Dani-Assembler/asembler/Calculator/Calculator.LST ${OBJECTDIR}/Calculator.o.lst
+	@${RM}  F:/Willy/Dani-Assembler/asembler/Calculator/Calculator.HEX 
 	@${DEP_GEN} -d "${OBJECTDIR}/Calculator.o"
 	@${FIXDEPS} "${OBJECTDIR}/Calculator.o.d" $(SILENT) -rsi ${MP_AS_DIR} -c18 
 	
@@ -107,7 +111,11 @@ ${OBJECTDIR}/Calculator.o: Calculator.asm  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} "${OBJECTDIR}" 
 	@${RM} ${OBJECTDIR}/Calculator.o.d 
 	@${RM} ${OBJECTDIR}/Calculator.o 
-	@${FIXDEPS} dummy.d -e "${OBJECTDIR}/Calculator.err" $(SILENT) -c ${MP_AS} $(MP_EXTRA_AS_PRE) -q -p$(MP_PROCESSOR_OPTION)  -l\"${OBJECTDIR}/Calculator.lst\" -e\"${OBJECTDIR}/Calculator.err\" $(ASM_OPTIONS)    -o\"${OBJECTDIR}/Calculator.o\" \"Calculator.asm\" 
+	@${FIXDEPS} dummy.d -e "F:/Willy/Dani-Assembler/asembler/Calculator/Calculator.ERR" $(SILENT) -c ${MP_AS} $(MP_EXTRA_AS_PRE) -q -p$(MP_PROCESSOR_OPTION)  $(ASM_OPTIONS)    \"F:/Willy/Dani-Assembler/asembler/Calculator/Calculator.asm\" 
+	@${MV}  F:/Willy/Dani-Assembler/asembler/Calculator/Calculator.O ${OBJECTDIR}/Calculator.o
+	@${MV}  F:/Willy/Dani-Assembler/asembler/Calculator/Calculator.ERR ${OBJECTDIR}/Calculator.o.err
+	@${MV}  F:/Willy/Dani-Assembler/asembler/Calculator/Calculator.LST ${OBJECTDIR}/Calculator.o.lst
+	@${RM}  F:/Willy/Dani-Assembler/asembler/Calculator/Calculator.HEX 
 	@${DEP_GEN} -d "${OBJECTDIR}/Calculator.o"
 	@${FIXDEPS} "${OBJECTDIR}/Calculator.o.d" $(SILENT) -rsi ${MP_AS_DIR} -c18 
 	
