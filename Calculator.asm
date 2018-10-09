@@ -14,7 +14,8 @@
     CBLOCK 0x20
     OperandoA	    ;Guarda el valor del primero operando
     OperandoB	    ;Guarda el valor del segundo operando
-    Aux		    ;Variable auxiliar
+    RegSuma	    ;Guarda el valor de la suma
+    RegResta	    ;Guarda el valor de la resta
     ENDC
     
 ;Definición de variables********************************************************
@@ -57,10 +58,36 @@ Principal
     goto CargarOpA
     btfss Pulsador2	;Salta si el pulsador 2 no está presionado
     goto CargarOpB
+    btfss Pulsador3	;Salta si el pulsador 3 no está presionado
+    goto SumaAB
     goto Principal
 
+;Subrutina SumaAB***************************************************************
+SumaAB    
+    clrf PORTB
+    movf OperandoB,W
+    addwf OperandoA,W
+    movwf RegSuma
+    andlw b'00001111'	;Se queda conlos cuatro bits más bajos de entrada
+    call DecoHEX	;Decodifica el nibble inferior en hexadecimal
+    movwf PORTD		;Se visualiza por el puerto de salida
+    
+    swapf RegSuma,W	;Se intercambian los nibbles del puerto
+    andlw b'00001111'	;Se queda conlos cuatro bits más bajos de entrada
+    call DecoHEX	;Decodifica el nibble inferior en hexadecimal
+    movwf PORTC		;Se visualiza por el puerto de salida   
+    
+    movf OperandoB,W
+    addwf OperandoA,W
+    btfss STATUS,C	;¿Hubo desbordamiento? ¿C = 1?
+    goto Principal	
+    bsf PORTB,1		;Enciende el segmento b del display
+    bsf PORTB,2		;Enciende el segmento c del display
+    goto Principal
+    
 ;Subrutina CargarOpA************************************************************
 CargarOpA
+    clrf PORTB
     movf PORTA,W	;Carga el registro de datos del Puerto A en W.
     movwf OperandoA	;Se guarda el valor del puerto en la regstro OperandoA        
     movf OperandoA,W	;Lee el valor de las variables de entrada
@@ -76,6 +103,7 @@ CargarOpA
     
 ;Subrutina CargarOpA************************************************************
 CargarOpB
+    clrf PORTB
     movf PORTA,W	;Carga el registro de datos del Puerto A en W.
     movwf OperandoB	;Se guarda el valor del puerto en la regstro OperandoA        
     movf OperandoB,W	;Lee el valor de las variables de entrada

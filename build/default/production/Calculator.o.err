@@ -1,8 +1,8 @@
 Warning[215] F:\WILLY\DANI-ASSEMBLER\ASEMBLER\CALCULATOR\CALCULATOR.ASM 6 : Processor superseded by command line.  Verify processor symbol.
-Message[302] F:\WILLY\DANI-ASSEMBLER\ASEMBLER\CALCULATOR\CALCULATOR.ASM 33 : Register in operand not in bank 0.  Ensure that bank bits are correct.
 Message[302] F:\WILLY\DANI-ASSEMBLER\ASEMBLER\CALCULATOR\CALCULATOR.ASM 34 : Register in operand not in bank 0.  Ensure that bank bits are correct.
-Message[302] F:\WILLY\DANI-ASSEMBLER\ASEMBLER\CALCULATOR\CALCULATOR.ASM 38 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] F:\WILLY\DANI-ASSEMBLER\ASEMBLER\CALCULATOR\CALCULATOR.ASM 35 : Register in operand not in bank 0.  Ensure that bank bits are correct.
 Message[302] F:\WILLY\DANI-ASSEMBLER\ASEMBLER\CALCULATOR\CALCULATOR.ASM 39 : Register in operand not in bank 0.  Ensure that bank bits are correct.
 Message[302] F:\WILLY\DANI-ASSEMBLER\ASEMBLER\CALCULATOR\CALCULATOR.ASM 40 : Register in operand not in bank 0.  Ensure that bank bits are correct.
-Message[302] F:\WILLY\DANI-ASSEMBLER\ASEMBLER\CALCULATOR\CALCULATOR.ASM 42 : Register in operand not in bank 0.  Ensure that bank bits are correct.
-Message[302] F:\WILLY\DANI-ASSEMBLER\ASEMBLER\CALCULATOR\CALCULATOR.ASM 44 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] F:\WILLY\DANI-ASSEMBLER\ASEMBLER\CALCULATOR\CALCULATOR.ASM 41 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] F:\WILLY\DANI-ASSEMBLER\ASEMBLER\CALCULATOR\CALCULATOR.ASM 43 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] F:\WILLY\DANI-ASSEMBLER\ASEMBLER\CALCULATOR\CALCULATOR.ASM 45 : Register in operand not in bank 0.  Ensure that bank bits are correct.
