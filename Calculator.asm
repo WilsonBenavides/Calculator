@@ -40,7 +40,7 @@ Inicio
     clrf TRISC		;Las líneasd del Puerto C se configuran como salidas
     movlw b'10000000'	;Se utilizan los 7 primeros bits del Puerto D como 
     movwf TRISD		;salidas y el pin RD7 como entrada
-    movlw b'00000111'
+    movlw b'00001111'
     movwf TRISE		;Pines RE0, RE1, RE2 como entradas.
     
     banksel PORTA
@@ -48,23 +48,29 @@ Inicio
     clrf PORTB
     clrf PORTC
     clrf PORTD
-    clrf PORTE
-    movlw b'00011010'
-    movwf OperandoA
+    clrf PORTE    
+    clrf OperandoA
+    clrf OperandoB
     
-Principal
+Principal       
+    btfss Pulsador1	;Salta si el pulsador 1 no está presionado
+    goto CargarOpA
+goto Principal
+
+;Subrutina CargarOpA************************************************************
+CargarOpA
+    movf PORTA,W	;Carga el registro de datos del Puerto A en W.
+    movwf OperandoA	;Se guarda el valor del puerto en la regstro OperandoA        
     movf OperandoA,W	;Lee el valor de las variables de entrada
     andlw b'00001111'	;Se queda conlos cuatro bits más bajos de entrada
     call DecoHEX	;Decodifica el nibble inferior en hexadecimal
     movwf PORTD		;Se visualiza por el puerto de salida
     
-    
     swapf OperandoA,W	;Se intercambian los nibbles del puerto
     andlw b'00001111'	;Se queda conlos cuatro bits más bajos de entrada
     call DecoHEX	;Decodifica el nibble inferior en hexadecimal
-    movwf PORTC		;Se visualiza por el puerto de salida
+    movwf PORTC		;Se visualiza por el puerto de salida    
     goto Principal	;Se crea un bucle cerrado infinito
-    
 ;Subrutina DecoHEX**************************************************************    
 DecoHEX
     addwf PCL,F		;-gfedcba

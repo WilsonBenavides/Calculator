@@ -6,3 +6,4 @@ Message[302] F:\WILLY\DANI-ASSEMBLER\ASEMBLER\CALCULATOR\CALCULATOR.ASM 39 : Reg
 Message[302] F:\WILLY\DANI-ASSEMBLER\ASEMBLER\CALCULATOR\CALCULATOR.ASM 40 : Register in operand not in bank 0.  Ensure that bank bits are correct.
 Message[302] F:\WILLY\DANI-ASSEMBLER\ASEMBLER\CALCULATOR\CALCULATOR.ASM 42 : Register in operand not in bank 0.  Ensure that bank bits are correct.
 Message[302] F:\WILLY\DANI-ASSEMBLER\ASEMBLER\CALCULATOR\CALCULATOR.ASM 44 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Warning[203] F:\WILLY\DANI-ASSEMBLER\ASEMBLER\CALCULATOR\CALCULATOR.ASM 58 : Found opcode in column 1. (goto)

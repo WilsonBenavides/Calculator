@@ -1,4 +1,4 @@
-MPASM 5.75                    CALCULATOR.ASM   10-9-2018  15:44:16         PAGE  1
+MPASM 5.75                    CALCULATOR.ASM   10-9-2018  16:41:42         PAGE  1
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
@@ -57,7 +57,7 @@ Message[302]: Register in operand not in bank 0.  Ensure that bank bits are corr
 000B   30FF           00037     movlw b'11111111'   
 Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
 000C   0085           00038     movwf TRISA         ;Las líneas del Puerto A se configuran como entradas
-MPASM 5.75                    CALCULATOR.ASM   10-9-2018  15:44:16         PAGE  2
+MPASM 5.75                    CALCULATOR.ASM   10-9-2018  16:41:42         PAGE  2
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
@@ -70,7 +70,7 @@ Message[302]: Register in operand not in bank 0.  Ensure that bank bits are corr
 000F   3080           00041     movlw b'10000000'   ;Se utilizan los 7 primeros bits del Puerto D como 
 Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
 0010   0088           00042     movwf TRISD         ;salidas y el pin RD7 como entrada
-0011   3007           00043     movlw b'00000111'
+0011   300F           00043     movlw b'00001111'
 Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
 0012   0089           00044     movwf TRISE         ;Pines RE0, RE1, RE2 como entradas.
                       00045     
@@ -79,51 +79,58 @@ Message[302]: Register in operand not in bank 0.  Ensure that bank bits are corr
 0016   0186           00048     clrf PORTB
 0017   0187           00049     clrf PORTC
 0018   0188           00050     clrf PORTD
-0019   0189           00051     clrf PORTE
-001A   301A           00052     movlw b'00011010'
-001B   00A0           00053     movwf OperandoA
+0019   0189           00051     clrf PORTE    
+001A   01A0           00052     clrf OperandoA
+001B   01A1           00053     clrf OperandoB
                       00054     
-001C                  00055 Principal
-001C   0820           00056     movf OperandoA,W    ;Lee el valor de las variables de entrada
-001D   390F           00057     andlw b'00001111'   ;Se queda conlos cuatro bits más bajos de entrada
-001E   2025           00058     call DecoHEX        ;Decodifica el nibble inferior en hexadecimal
-001F   0088           00059     movwf PORTD         ;Se visualiza por el puerto de salida
-                      00060     
-                      00061     
-0020   0E20           00062     swapf OperandoA,W   ;Se intercambian los nibbles del puerto
-0021   390F           00063     andlw b'00001111'   ;Se queda conlos cuatro bits más bajos de entrada
-0022   2025           00064     call DecoHEX        ;Decodifica el nibble inferior en hexadecimal
-0023   0087           00065     movwf PORTC         ;Se visualiza por el puerto de salida
-0024   281C           00066     goto Principal      ;Se crea un bucle cerrado infinito
-                      00067     
-                      00068 ;Subrutina DecoHEX**************************************************************    
-0025                  00069 DecoHEX
-0025   0782           00070     addwf PCL,F         ;-gfedcba
-0026   343F           00071     retlw b'00111111'   ;0
-0027   3406           00072     retlw b'00000110'   ;1
-0028   345B           00073     retlw b'01011011'   ;2
-0029   344F           00074     retlw b'01001111'   ;3
-002A   3466           00075     retlw b'01100110'   ;4
-002B   346D           00076     retlw b'01101101'   ;5
-002C   347D           00077     retlw b'01111101'   ;6
-002D   3407           00078     retlw b'00000111'   ;7
-002E   347F           00079     retlw b'01111111'   ;8
-002F   346F           00080     retlw b'01101111'   ;9
-0030   3477           00081     retlw b'01110111'   ;A
-0031   347C           00082     retlw b'01111100'   ;b
-0032   3439           00083     retlw b'00111001'   ;C
-0033   345E           00084     retlw b'01011110'   ;d
-0034   3479           00085     retlw b'01111001'   ;E
-0035   3471           00086     retlw b'01110001'   ;F
-                      00087     
-MPASM 5.75                    CALCULATOR.ASM   10-9-2018  15:44:16         PAGE  3
+001C                  00055 Principal       
+001C   1C09           00056     btfss Pulsador1     ;Salta si el pulsador 1 no está presionado
+001D   281F           00057     goto CargarOpA
+Warning[203]: Found opcode in column 1. (goto)
+001E   281C           00058 goto Principal
+                      00059 
+                      00060 ;Subrutina CargarOpA************************************************************
+001F                  00061 CargarOpA
+001F   0805           00062     movf PORTA,W        ;Carga el registro de datos del Puerto A en W.
+0020   00A0           00063     movwf OperandoA     ;Se guarda el valor del puerto en la regstro OperandoA        
+0021   0820           00064     movf OperandoA,W    ;Lee el valor de las variables de entrada
+0022   390F           00065     andlw b'00001111'   ;Se queda conlos cuatro bits más bajos de entrada
+0023   202A           00066     call DecoHEX        ;Decodifica el nibble inferior en hexadecimal
+0024   0088           00067     movwf PORTD         ;Se visualiza por el puerto de salida
+                      00068     
+0025   0E20           00069     swapf OperandoA,W   ;Se intercambian los nibbles del puerto
+0026   390F           00070     andlw b'00001111'   ;Se queda conlos cuatro bits más bajos de entrada
+0027   202A           00071     call DecoHEX        ;Decodifica el nibble inferior en hexadecimal
+0028   0087           00072     movwf PORTC         ;Se visualiza por el puerto de salida    
+0029   281C           00073     goto Principal      ;Se crea un bucle cerrado infinito
+                      00074 ;Subrutina DecoHEX**************************************************************    
+002A                  00075 DecoHEX
+002A   0782           00076     addwf PCL,F         ;-gfedcba
+002B   343F           00077     retlw b'00111111'   ;0
+002C   3406           00078     retlw b'00000110'   ;1
+002D   345B           00079     retlw b'01011011'   ;2
+002E   344F           00080     retlw b'01001111'   ;3
+002F   3466           00081     retlw b'01100110'   ;4
+0030   346D           00082     retlw b'01101101'   ;5
+0031   347D           00083     retlw b'01111101'   ;6
+0032   3407           00084     retlw b'00000111'   ;7
+0033   347F           00085     retlw b'01111111'   ;8
+0034   346F           00086     retlw b'01101111'   ;9
+MPASM 5.75                    CALCULATOR.ASM   10-9-2018  16:41:42         PAGE  3
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
   VALUE
 
-                      00088     END
-MPASM 5.75                    CALCULATOR.ASM   10-9-2018  15:44:16         PAGE  4
+0035   3477           00087     retlw b'01110111'   ;A
+0036   347C           00088     retlw b'01111100'   ;b
+0037   3439           00089     retlw b'00111001'   ;C
+0038   345E           00090     retlw b'01011110'   ;d
+0039   3479           00091     retlw b'01111001'   ;E
+003A   3471           00092     retlw b'01110001'   ;F
+                      00093     
+                      00094     END
+MPASM 5.75                    CALCULATOR.ASM   10-9-2018  16:41:42         PAGE  4
 
 
 SYMBOL TABLE
@@ -182,7 +189,7 @@ BRG5                              00000005
 BRG6                              00000006
 BRG7                              00000007
 BRG8                              00000000
-MPASM 5.75                    CALCULATOR.ASM   10-9-2018  15:44:16         PAGE  5
+MPASM 5.75                    CALCULATOR.ASM   10-9-2018  16:41:42         PAGE  5
 
 
 SYMBOL TABLE
@@ -241,7 +248,7 @@ CCPR2L                            0000001B
 CHS0                              00000002
 CHS1                              00000003
 CHS2                              00000004
-MPASM 5.75                    CALCULATOR.ASM   10-9-2018  15:44:16         PAGE  6
+MPASM 5.75                    CALCULATOR.ASM   10-9-2018  16:41:42         PAGE  6
 
 
 SYMBOL TABLE
@@ -255,6 +262,7 @@ CM2CON0                           00000108
 CM2CON1                           00000109
 CREN                              00000004
 CSRC                              00000007
+CargarOpA                         0000001F
 D                                 00000005
 DATA_ADDRESS                      00000005
 DC                                00000001
@@ -264,7 +272,7 @@ DC2B0                             00000004
 DC2B1                             00000005
 D_A                               00000005
 D_NOT_A                           00000005
-DecoHEX                           00000025
+DecoHEX                           0000002A
 ECCPAS                            0000009C
 ECCPAS0                           00000004
 ECCPAS1                           00000005
@@ -299,13 +307,13 @@ INTCON                            0000000B
 INTE                              00000004
 INTEDG                            00000006
 INTF                              00000001
-IOCB                              00000096
-MPASM 5.75                    CALCULATOR.ASM   10-9-2018  15:44:16         PAGE  7
+MPASM 5.75                    CALCULATOR.ASM   10-9-2018  16:41:42         PAGE  7
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
+IOCB                              00000096
 IOCB0                             00000000
 IOCB1                             00000001
 IOCB2                             00000002
@@ -358,13 +366,13 @@ P                                 00000004
 P1M0                              00000006
 P1M1                              00000007
 PCL                               00000002
-PCLATH                            0000000A
-MPASM 5.75                    CALCULATOR.ASM   10-9-2018  15:44:16         PAGE  8
+MPASM 5.75                    CALCULATOR.ASM   10-9-2018  16:41:42         PAGE  8
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
+PCLATH                            0000000A
 PCON                              0000008E
 PDC0                              00000000
 PDC1                              00000001
@@ -417,13 +425,13 @@ RB1                               00000001
 RB2                               00000002
 RB3                               00000003
 RB4                               00000004
-RB5                               00000005
-MPASM 5.75                    CALCULATOR.ASM   10-9-2018  15:44:16         PAGE  9
+MPASM 5.75                    CALCULATOR.ASM   10-9-2018  16:41:42         PAGE  9
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
+RB5                               00000005
 RB6                               00000006
 RB7                               00000007
 RBIE                              00000003
@@ -476,13 +484,13 @@ SMP                               00000007
 SPBRG                             00000099
 SPBRGH                            0000009A
 SPEN                              00000007
-SR0                               00000006
-MPASM 5.75                    CALCULATOR.ASM   10-9-2018  15:44:16         PAGE 10
+MPASM 5.75                    CALCULATOR.ASM   10-9-2018  16:41:42         PAGE 10
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
+SR0                               00000006
 SR1                               00000007
 SRCON                             00000185
 SREN                              00000005
@@ -535,13 +543,13 @@ TMR1IE                            00000000
 TMR1IF                            00000000
 TMR1L                             0000000E
 TMR1ON                            00000000
-TMR2                              00000011
-MPASM 5.75                    CALCULATOR.ASM   10-9-2018  15:44:16         PAGE 11
+MPASM 5.75                    CALCULATOR.ASM   10-9-2018  16:41:42         PAGE 11
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
+TMR2                              00000011
 TMR2IE                            00000001
 TMR2IF                            00000001
 TMR2ON                            00000002
@@ -594,13 +602,13 @@ TRMT                              00000001
 TUN0                              00000000
 TUN1                              00000001
 TUN2                              00000002
-TUN3                              00000003
-MPASM 5.75                    CALCULATOR.ASM   10-9-2018  15:44:16         PAGE 12
+MPASM 5.75                    CALCULATOR.ASM   10-9-2018  16:41:42         PAGE 12
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
+TUN3                              00000003
 TUN4                              00000004
 TX8_9                             00000006
 TX9                               00000006
@@ -653,13 +661,13 @@ _BOR4V_BOR21V                     00003EFF
 _BOR4V_BOR40V                     00003FFF
 _BOREN_NSLEEP                     00003EFF
 _BOREN_OFF                        00003CFF
-_BOREN_ON                         00003FFF
-MPASM 5.75                    CALCULATOR.ASM   10-9-2018  15:44:16         PAGE 13
+MPASM 5.75                    CALCULATOR.ASM   10-9-2018  16:41:42         PAGE 13
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
+_BOREN_ON                         00003FFF
 _BOREN_SBODEN                     00003DFF
 _BOR_NSLEEP                       00003EFF
 _BOR_OFF                          00003CFF
@@ -712,13 +720,13 @@ _WDTE_ON                          00003FFF
 _WDT_OFF                          00003FF7
 _WDT_ON                           00003FFF
 _WRT_1FOURTH                      00003BFF
-_WRT_256                          00003DFF
-MPASM 5.75                    CALCULATOR.ASM   10-9-2018  15:44:16         PAGE 14
+MPASM 5.75                    CALCULATOR.ASM   10-9-2018  16:41:42         PAGE 14
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
+_WRT_256                          00003DFF
 _WRT_HALF                         000039FF
 _WRT_OFF                          00003FFF
 _XT_OSC                           00003FF9
@@ -727,17 +735,17 @@ __16F887                          00000001
 
 MEMORY USAGE MAP ('X' = Used,  '-' = Unused)
 
-0000 : X----XXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXX----------
+0000 : X----XXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXX-----
 2000 : -------XX------- ---------------- ---------------- ----------------
 
 All other memory blocks unused.
 
-Program Memory Words Used:    50
-Program Memory Words Free:  8142
+Program Memory Words Used:    55
+Program Memory Words Free:  8137
 
 
 Errors   :     0
-Warnings :     1 reported,     0 suppressed
+Warnings :     2 reported,     0 suppressed
 Messages :     7 reported,     0 suppressed
 
 
