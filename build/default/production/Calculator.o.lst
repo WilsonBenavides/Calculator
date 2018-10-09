@@ -1,4 +1,4 @@
-MPASM 5.75                    CALCULATOR.ASM   10-9-2018  9:54:05         PAGE  1
+MPASM 5.75                    CALCULATOR.ASM   10-9-2018  15:18:55         PAGE  1
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
@@ -28,93 +28,90 @@ Warning[215]: Processor superseded by command line.  Verify processor symbol.
                             _BOREN_OFF & _IESO_OFF & _FCMEN_OFF & _LVP_OFF
 2008   3FFF           00011     __CONFIG _CONFIG2, _BOR4V_BOR40V & _WRT_OFF
                       00012     
-                      00013 ;Definición de variables********************************************************
-                      00014 #DEFINE Pulsador1   PORTE,0     ;Los pulsadores se conectan a estos 
-                      00015 #DEFINE Pulsador2   PORTE,1     ;pines del puerto E.
-                      00016 #DEFINE Pulsador3   PORTE,2     ;En total usamos tres pines del puerto E
-                      00017 #DEFINE Pulsador4   PORTD,7     ;y un pin del puerto D.
-                      00018 
-                      00019 ;Código fuente******************************************************************    
-0000                  00020     org 0x00        ;El programa comienza en la dirección 0x00 
-0000   2805           00021     goto Inicio     ;de memoria de programa
-0005                  00022     org 0x05
-                      00023     
-0005                  00024 Inicio
-0005   1683 1703      00025     banksel ANSEL   ;El registro ANSEL debe inicializarse en cero para configurar
+                      00013 ;
+                      00014     CBLOCK 0x20
+  00000020            00015     OperandoA       ;Guarda el valor del primero operando
+  00000021            00016     OperandoB       ;Guarda el valor del segundo operando
+  00000022            00017     Aux             ;Variable auxiliar
+                      00018     ENDC
+                      00019     
+                      00020 ;Definición de variables********************************************************
+                      00021 #DEFINE Pulsador1   PORTE,0     ;Los pulsadores se conectan a estos 
+                      00022 #DEFINE Pulsador2   PORTE,1     ;pines del puerto E.
+                      00023 #DEFINE Pulsador3   PORTE,2     ;En total usamos tres pines del puerto E
+                      00024 #DEFINE Pulsador4   PORTD,7     ;y un pin del puerto D.
+                      00025 
+                      00026 ;Código fuente******************************************************************    
+0000                  00027     org 0x00        ;El programa comienza en la dirección 0x00 
+0000   2805           00028     goto Inicio     ;de memoria de programa
+0005                  00029     org 0x05
+                      00030     
+0005                  00031 Inicio
+0005   1683 1703      00032     banksel ANSEL   ;El registro ANSEL debe inicializarse en cero para configurar
 Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-0007   0188           00026     clrf ANSEL      ; un canal analógico como entradas digitales
+0007   0188           00033     clrf ANSEL      ; un canal analógico como entradas digitales
 Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-0008   0189           00027     clrf ANSELH
-                      00028     
-0009   1683 1303      00029     banksel TRISA       ;Acceso al banco 1
-000B   30FF           00030     movlw b'11111111'   
+0008   0189           00034     clrf ANSELH
+                      00035     
+0009   1683 1303      00036     banksel TRISA       ;Acceso al banco 1
+000B   30FF           00037     movlw b'11111111'   
 Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-000C   0085           00031     movwf TRISA         ;Las líneas del Puerto A se configuran como entradas
-Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-000D   0186           00032     clrf TRISB          ;Las líneasd del Puerto B se configuran como salidas
-Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-000E   0187           00033     clrf TRISC          ;Las líneasd del Puerto C se configuran como salidas
-000F   3080           00034     movlw b'10000000'   ;Se utilizan los 7 primeros bits del Puerto D como 
-Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-0010   0088           00035     movwf TRISD         ;salidas y el pin RD7 como entrada
-MPASM 5.75                    CALCULATOR.ASM   10-9-2018  9:54:05         PAGE  2
+000C   0085           00038     movwf TRISA         ;Las líneas del Puerto A se configuran como entradas
+MPASM 5.75                    CALCULATOR.ASM   10-9-2018  15:18:55         PAGE  2
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
   VALUE
 
-0011   3007           00036     movlw b'00000111'
 Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-0012   0089           00037     movwf TRISE         ;Pines RE0, RE1, RE2 como entradas.
-                      00038     
-0013   1283 1303      00039     banksel PORTA
-0015   0185           00040     clrf PORTA
-0016   0186           00041     clrf PORTB
-0017   0187           00042     clrf PORTC
-0018   0188           00043     clrf PORTD
-0019   0189           00044     clrf PORTE
+000D   0186           00039     clrf TRISB          ;Las líneasd del Puerto B se configuran como salidas
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+000E   0187           00040     clrf TRISC          ;Las líneasd del Puerto C se configuran como salidas
+000F   3080           00041     movlw b'10000000'   ;Se utilizan los 7 primeros bits del Puerto D como 
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0010   0088           00042     movwf TRISD         ;salidas y el pin RD7 como entrada
+0011   3007           00043     movlw b'00000111'
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0012   0089           00044     movwf TRISE         ;Pines RE0, RE1, RE2 como entradas.
                       00045     
-001A                  00046 Principal
-001A   0186           00047     clrf PORTB
-001B   0187           00048     clrf PORTC
-001C   0188           00049     clrf PORTD
-                      00050     
-001D   1C09           00051     btfss Pulsador1
-001E   2826           00052     goto EnciendeLed0    
-001F   1C89           00053     btfss Pulsador2
-0020   282A           00054     goto EnciendeLed1
-0021   1D09           00055     btfss Pulsador3
-0022   282E           00056     goto EnciendeLed2
-0023   1F88           00057     btfss Pulsador4
-0024   2832           00058     goto EnciendeLed3
-0025   281A           00059     goto Principal  ;Se crea un bucle cerrado infinito
-                      00060 
-0026                  00061 EnciendeLed0
-0026   1406           00062     bsf PORTB,0
-0027   1407           00063     bsf PORTC,0
-0028   1408           00064     bsf PORTD,0
-0029   281A           00065     goto Principal
-                      00066     
-002A                  00067 EnciendeLed1
-002A   1486           00068     bsf PORTB,1
-002B   1487           00069     bsf PORTC,1
-002C   1488           00070     bsf PORTD,1
-002D   281A           00071     goto Principal    
-                      00072     
-002E                  00073 EnciendeLed2
-002E   1506           00074     bsf PORTB,2
-002F   1507           00075     bsf PORTC,2
-0030   1508           00076     bsf PORTD,2
-0031   281A           00077     goto Principal   
-                      00078     
-0032                  00079 EnciendeLed3
-0032   1586           00080     bsf PORTB,3
-0033   1587           00081     bsf PORTC,3
-0034   1588           00082     bsf PORTD,3
-0035   281A           00083     goto Principal    
-                      00084     
-                      00085     END
-MPASM 5.75                    CALCULATOR.ASM   10-9-2018  9:54:05         PAGE  3
+0013   1283 1303      00046     banksel PORTA
+0015   0185           00047     clrf PORTA
+0016   0186           00048     clrf PORTB
+0017   0187           00049     clrf PORTC
+0018   0188           00050     clrf PORTD
+0019   0189           00051     clrf PORTE
+                      00052     
+001A                  00053 Principal
+001A   0805           00054     movf PORTA,W        ;Lee el valor de las variables de entrada
+001B   390F           00055     andlw b'00001111'   ;Se queda conlos cuatro bits más bajos de entrada
+001C   2021           00056     call DecoHEX        ;Decodifica el nibble inferior en hexadecimal
+001D   0086           00057     movwf PORTB         ;Se visualiza por el puerto de salida
+001E   0087           00058     movwf PORTC
+001F   0088           00059     movwf PORTD
+0020   281A           00060     goto Principal      ;Se crea un bucle cerrado infinito
+                      00061     
+                      00062 ;Subrutina DecoHEX**************************************************************    
+0021                  00063 DecoHEX
+0021   0782           00064     addwf PCL,F         ;-gfedcba
+0022   343F           00065     retlw b'00111111'   ;0
+0023   3406           00066     retlw b'00000110'   ;1
+0024   345B           00067     retlw b'01011011'   ;2
+0025   344F           00068     retlw b'01001111'   ;3
+0026   3466           00069     retlw b'01100110'   ;4
+0027   346D           00070     retlw b'01101101'   ;5
+0028   347D           00071     retlw b'01111101'   ;6
+0029   3407           00072     retlw b'00000111'   ;7
+002A   347F           00073     retlw b'01111111'   ;8
+002B   346F           00074     retlw b'01101111'   ;9
+002C   3477           00075     retlw b'01110111'   ;A
+002D   347C           00076     retlw b'01111100'   ;b
+002E   3439           00077     retlw b'00111001'   ;C
+002F   345E           00078     retlw b'01011110'   ;d
+0030   3479           00079     retlw b'01111001'   ;E
+0031   3471           00080     retlw b'01110001'   ;F
+                      00081     
+                      00082     END
+MPASM 5.75                    CALCULATOR.ASM   10-9-2018  15:18:55         PAGE  3
 
 
 SYMBOL TABLE
@@ -152,6 +149,7 @@ ANS8                              00000000
 ANS9                              00000001
 ANSEL                             00000188
 ANSELH                            00000189
+Aux                               00000022
 BAUDCTL                           00000187
 BCLIE                             00000003
 BCLIF                             00000003
@@ -172,13 +170,13 @@ BRG5                              00000005
 BRG6                              00000006
 BRG7                              00000007
 BRG8                              00000000
-BRG9                              00000001
-MPASM 5.75                    CALCULATOR.ASM   10-9-2018  9:54:05         PAGE  4
+MPASM 5.75                    CALCULATOR.ASM   10-9-2018  15:18:55         PAGE  4
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
+BRG9                              00000001
 BRGH                              00000002
 C                                 00000000
 C1CH0                             00000000
@@ -231,13 +229,13 @@ CCPR2L                            0000001B
 CHS0                              00000002
 CHS1                              00000003
 CHS2                              00000004
-CHS3                              00000005
-MPASM 5.75                    CALCULATOR.ASM   10-9-2018  9:54:05         PAGE  5
+MPASM 5.75                    CALCULATOR.ASM   10-9-2018  15:18:55         PAGE  5
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
+CHS3                              00000005
 CKE                               00000006
 CKP                               00000004
 CM1CON0                           00000107
@@ -254,6 +252,7 @@ DC2B0                             00000004
 DC2B1                             00000005
 D_A                               00000005
 D_NOT_A                           00000005
+DecoHEX                           00000021
 ECCPAS                            0000009C
 ECCPAS0                           00000004
 ECCPAS1                           00000005
@@ -269,10 +268,6 @@ EEDATH                            0000010E
 EEIE                              00000004
 EEIF                              00000004
 EEPGD                             00000007
-EnciendeLed0                      00000026
-EnciendeLed1                      0000002A
-EnciendeLed2                      0000002E
-EnciendeLed3                      00000032
 F                                 00000001
 FERR                              00000002
 FSR                               00000004
@@ -291,14 +286,14 @@ INDF                              00000000
 INTCON                            0000000B
 INTE                              00000004
 INTEDG                            00000006
-MPASM 5.75                    CALCULATOR.ASM   10-9-2018  9:54:05         PAGE  6
+INTF                              00000001
+IOCB                              00000096
+MPASM 5.75                    CALCULATOR.ASM   10-9-2018  15:18:55         PAGE  6
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
-INTF                              00000001
-IOCB                              00000096
 IOCB0                             00000000
 IOCB1                             00000001
 IOCB2                             00000002
@@ -345,12 +340,14 @@ OSCTUNE                           00000090
 OSFIE                             00000007
 OSFIF                             00000007
 OSTS                              00000003
+OperandoA                         00000020
+OperandoB                         00000021
 P                                 00000004
 P1M0                              00000006
 P1M1                              00000007
 PCL                               00000002
 PCLATH                            0000000A
-MPASM 5.75                    CALCULATOR.ASM   10-9-2018  9:54:05         PAGE  7
+MPASM 5.75                    CALCULATOR.ASM   10-9-2018  15:18:55         PAGE  7
 
 
 SYMBOL TABLE
@@ -409,7 +406,7 @@ RB2                               00000002
 RB3                               00000003
 RB4                               00000004
 RB5                               00000005
-MPASM 5.75                    CALCULATOR.ASM   10-9-2018  9:54:05         PAGE  8
+MPASM 5.75                    CALCULATOR.ASM   10-9-2018  15:18:55         PAGE  8
 
 
 SYMBOL TABLE
@@ -468,7 +465,7 @@ SPBRG                             00000099
 SPBRGH                            0000009A
 SPEN                              00000007
 SR0                               00000006
-MPASM 5.75                    CALCULATOR.ASM   10-9-2018  9:54:05         PAGE  9
+MPASM 5.75                    CALCULATOR.ASM   10-9-2018  15:18:55         PAGE  9
 
 
 SYMBOL TABLE
@@ -527,7 +524,7 @@ TMR1IF                            00000000
 TMR1L                             0000000E
 TMR1ON                            00000000
 TMR2                              00000011
-MPASM 5.75                    CALCULATOR.ASM   10-9-2018  9:54:05         PAGE 10
+MPASM 5.75                    CALCULATOR.ASM   10-9-2018  15:18:55         PAGE 10
 
 
 SYMBOL TABLE
@@ -586,7 +583,7 @@ TUN0                              00000000
 TUN1                              00000001
 TUN2                              00000002
 TUN3                              00000003
-MPASM 5.75                    CALCULATOR.ASM   10-9-2018  9:54:05         PAGE 11
+MPASM 5.75                    CALCULATOR.ASM   10-9-2018  15:18:55         PAGE 11
 
 
 SYMBOL TABLE
@@ -645,7 +642,7 @@ _BOR4V_BOR40V                     00003FFF
 _BOREN_NSLEEP                     00003EFF
 _BOREN_OFF                        00003CFF
 _BOREN_ON                         00003FFF
-MPASM 5.75                    CALCULATOR.ASM   10-9-2018  9:54:05         PAGE 12
+MPASM 5.75                    CALCULATOR.ASM   10-9-2018  15:18:55         PAGE 12
 
 
 SYMBOL TABLE
@@ -704,7 +701,7 @@ _WDT_OFF                          00003FF7
 _WDT_ON                           00003FFF
 _WRT_1FOURTH                      00003BFF
 _WRT_256                          00003DFF
-MPASM 5.75                    CALCULATOR.ASM   10-9-2018  9:54:05         PAGE 13
+MPASM 5.75                    CALCULATOR.ASM   10-9-2018  15:18:55         PAGE 13
 
 
 SYMBOL TABLE
@@ -718,13 +715,13 @@ __16F887                          00000001
 
 MEMORY USAGE MAP ('X' = Used,  '-' = Unused)
 
-0000 : X----XXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXX----------
+0000 : X----XXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XX--------------
 2000 : -------XX------- ---------------- ---------------- ----------------
 
 All other memory blocks unused.
 
-Program Memory Words Used:    50
-Program Memory Words Free:  8142
+Program Memory Words Used:    46
+Program Memory Words Free:  8146
 
 
 Errors   :     0

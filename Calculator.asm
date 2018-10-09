@@ -10,6 +10,13 @@
     __CONFIG _CONFIG1, _FOSC_INTRC_NOCLKOUT & _WDTE_OFF & _PWRTE_OFF & _MCLRE_ON & _CP_OFF & _CPD_OFF & _BOREN_OFF & _IESO_OFF & _FCMEN_OFF & _LVP_OFF
     __CONFIG _CONFIG2, _BOR4V_BOR40V & _WRT_OFF
     
+;
+    CBLOCK 0x20
+    OperandoA	    ;Guarda el valor del primero operando
+    OperandoB	    ;Guarda el valor del segundo operando
+    Aux		    ;Variable auxiliar
+    ENDC
+    
 ;Definición de variables********************************************************
 #DEFINE Pulsador1   PORTE,0	;Los pulsadores se conectan a estos 
 #DEFINE Pulsador2   PORTE,1	;pines del puerto E.
@@ -44,42 +51,32 @@ Inicio
     clrf PORTE
     
 Principal
-    clrf PORTB
-    clrf PORTC
-    clrf PORTD
+    movf PORTA,W	;Lee el valor de las variables de entrada
+    andlw b'00001111'	;Se queda conlos cuatro bits más bajos de entrada
+    call DecoHEX	;Decodifica el nibble inferior en hexadecimal
+    movwf PORTB		;Se visualiza por el puerto de salida
+    movwf PORTC
+    movwf PORTD
+    goto Principal	;Se crea un bucle cerrado infinito
     
-    btfss Pulsador1
-    goto EnciendeLed0    
-    btfss Pulsador2
-    goto EnciendeLed1
-    btfss Pulsador3
-    goto EnciendeLed2
-    btfss Pulsador4
-    goto EnciendeLed3
-    goto Principal  ;Se crea un bucle cerrado infinito
-
-EnciendeLed0
-    bsf PORTB,0
-    bsf PORTC,0
-    bsf PORTD,0
-    goto Principal
-    
-EnciendeLed1
-    bsf PORTB,1
-    bsf PORTC,1
-    bsf PORTD,1
-    goto Principal    
-    
-EnciendeLed2
-    bsf PORTB,2
-    bsf PORTC,2
-    bsf PORTD,2
-    goto Principal   
-    
-EnciendeLed3
-    bsf PORTB,3
-    bsf PORTC,3
-    bsf PORTD,3
-    goto Principal    
+;Subrutina DecoHEX**************************************************************    
+DecoHEX
+    addwf PCL,F		;-gfedcba
+    retlw b'00111111'	;0
+    retlw b'00000110'	;1
+    retlw b'01011011'	;2
+    retlw b'01001111'	;3
+    retlw b'01100110'	;4
+    retlw b'01101101'	;5
+    retlw b'01111101'	;6
+    retlw b'00000111'	;7
+    retlw b'01111111'	;8
+    retlw b'01101111'	;9
+    retlw b'01110111'	;A
+    retlw b'01111100'	;b
+    retlw b'00111001'	;C
+    retlw b'01011110'	;d
+    retlw b'01111001'	;E
+    retlw b'01110001'	;F
     
     END
