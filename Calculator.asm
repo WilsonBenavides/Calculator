@@ -16,6 +16,7 @@
     OperandoB	    ;Guarda el valor del segundo operando
     RegSuma	    ;Guarda el valor de la suma
     RegResta	    ;Guarda el valor de la resta
+    RegComp	    ;Guarda el valor de la resta en complemento a 2
     ENDC
     
 ;Definición de variables********************************************************
@@ -60,8 +61,43 @@ Principal
     goto CargarOpB
     btfss Pulsador3	;Salta si el pulsador 3 no está presionado
     goto SumaAB
+    btfss Pulsador4	;Salta si el pulsador 4 no está presionado
+    goto RestaAB
     goto Principal
 
+;Subrutina SumaAB***************************************************************
+RestaAB    
+    clrf PORTB
+    movf OperandoB,W
+    subwf OperandoA,W	;(W) = (OperandoA) - (OperandoB)
+    movwf RegResta
+    andlw b'00001111'	;Se queda conlos cuatro bits más bajos de entrada
+    call DecoHEX	;Decodifica el nibble inferior en hexadecimal
+    movwf PORTD		;Se visualiza por el puerto de salida
+    
+    swapf RegResta,W	;Se intercambian los nibbles del puerto
+    andlw b'00001111'	;Se queda conlos cuatro bits más bajos de entrada
+    call DecoHEX	;Decodifica el nibble inferior en hexadecimal
+    movwf PORTC		;Se visualiza por el puerto de salida   
+    
+    movf OperandoB,W
+    subwf OperandoA,W
+    btfsc STATUS,C	;¿El resultado es negativo? ¿C = 1?
+    goto Principal	
+    bsf PORTB,6		;Enciende el segmento g del display 
+    comf RegResta,W	;Complementa a 2 el resultado de la resta
+    addlw 0x01		;(W) + 01 -> (W)
+    movwf RegComp	;Guarda el valor de la resta en complemento a  2
+    andlw b'00001111'	;Se queda conlos cuatro bits más bajos de entrada
+    call DecoHEX	;Decodifica el nibble inferior en hexadecimal
+    movwf PORTD		;Se visualiza por el puerto de salida
+    
+    swapf RegComp,W	;Se intercambian los nibbles del puerto
+    andlw b'00001111'	;Se queda conlos cuatro bits más bajos de entrada
+    call DecoHEX	;Decodifica el nibble inferior en hexadecimal
+    movwf PORTC		;Se visualiza por el puerto de salida 
+    goto Principal
+    
 ;Subrutina SumaAB***************************************************************
 SumaAB    
     clrf PORTB
